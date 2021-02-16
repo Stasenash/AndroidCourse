@@ -1,10 +1,6 @@
-package main.kotlin.Objects
+package main.kotlin.objects
 
-class Unicorn constructor(name: String, hasMagicHorn: Boolean, hornLength: Double, rainbowPower: Int){
-    var name = name
-    var hasMagicHorn = hasMagicHorn
-    var hornLength = hornLength
-    var rainbowPower = rainbowPower
+class Unicorn constructor(val name: String, val hasMagicHorn: Boolean, val hornLength: Double, val rainbowPower: Int){
 
     override fun toString(): String {
         val unicornStr = "Имя: " + name + "\n" +

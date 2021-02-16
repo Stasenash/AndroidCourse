@@ -1,12 +1,10 @@
-package main.kotlin.Generators
+package main.kotlin.generators
 
-import main.kotlin.Objects.Unicorn
+import main.kotlin.objects.Unicorn
 import kotlin.random.Random
 
 class UnicornGroupGenerator constructor(minUnicornCount: Int, maxUnicornCount: Int){
-    val minUnicornCount = minUnicornCount
-    val maxUnicornCount = maxUnicornCount
-    val unicornCountRandom = (minUnicornCount..maxUnicornCount).random()
+    private val unicornCountRandom = (minUnicornCount..maxUnicornCount).random()
 
     private fun randomName(): String = List(8) {
         (('a'..'z') + ('A'..'Z') + ('0'..'9')).random()

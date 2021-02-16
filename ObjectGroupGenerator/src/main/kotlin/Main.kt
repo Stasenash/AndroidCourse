@@ -1,7 +1,7 @@
 package main.kotlin
 
-import main.kotlin.Generators.UnicornGroupGenerator
-import main.kotlin.Objects.Unicorn
+import main.kotlin.generators.UnicornGroupGenerator
+import main.kotlin.objects.Unicorn
 
 fun main() {
     val unicornGroupGenerator = UnicornGroupGenerator(2, 7)

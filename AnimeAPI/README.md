@@ -20,7 +20,7 @@ Android проект для получения списка популярных
 Узнать больше [документация](https://jikan.docs.apiary.io/)
 
 В данном проекте использовались GET запросы к API:
-1) Получение аниме по индексу ```https://api.jikan.moe/v3/anime/{id}``` [Открыть пример запроса](https://api.jikan.moe/v3/anime/3)
+1) Получение аниме по индексу ```https://api.jikan.moe/v3/anime/{id}``` [Открыть пример запроса](https://api.jikan.moe/v3/anime/1)
 2) Получение 20 самых популярных аниме ```https://api.jikan.moe/v3/search/anime?q=&order_by=members&sort=desc&limit=20``` [Открыть пример запроса](https://api.jikan.moe/v3/search/anime?q=&order_by=members&sort=desc&limit=20)
 
 ----------

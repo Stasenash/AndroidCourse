@@ -1,10 +1,9 @@
 # AnimeAPI AndroidStudioProject
 
-Android project to fetch a list of popular anime (only available for now) and manga using JikanAPI.
+Android проект для получения списка популярных аниме и манги с помощью Jikan API.
 
-[![Developer]](https://vk.com/akane_izanami)
 
-## Содержане
+## Содержание
 
 #### [Jikan API описание и документация](#jikan-api)
 #### [Стек технологий](#ts-desc)
@@ -16,7 +15,7 @@ Android project to fetch a list of popular anime (only available for now) and ma
 ### Jikan API описание и документация
 <a name="jikan-api"></a>
 [Jikan](https://jikan.moe/)
-Jikan (時間) открытый исходный код PHP и REST API для «самого активного онлайн-сообщества и базы данных аниме + манги» - MyAnimeList.net. Он анализирует веб-сайт, чтобы предоставить API, которого нет у MyAnimeList.
+(時間) открытый исходный код PHP и REST API для «самого активного онлайн-сообщества и базы данных аниме + манги» - MyAnimeList.net. Он анализирует веб-сайт, чтобы предоставить API, которого нет у MyAnimeList.
 
 Узнать больше [документация](https://jikan.docs.apiary.io/)
 

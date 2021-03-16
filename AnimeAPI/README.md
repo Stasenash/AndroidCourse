@@ -7,8 +7,8 @@ Android project to fetch a list of popular anime (only available for now) and ma
 ## Содержане
 
 #### [Jikan API описание и документация](#jikan-api)
-#### [Структура проекта](#structure)
 #### [Стек технологий](#ts-desc)
+#### [Структура проекта](#structure)
 
 
 ----------
@@ -18,11 +18,13 @@ Android project to fetch a list of popular anime (only available for now) and ma
 [Jikan](https://jikan.moe/)
 Jikan (時間) открытый исходный код PHP и REST API для «самого активного онлайн-сообщества и базы данных аниме + манги» - MyAnimeList.net. Он анализирует веб-сайт, чтобы предоставить API, которого нет у MyAnimeList.
 
-Узнать больше [Документация](https://jikan.docs.apiary.io/)
+Узнать больше [документация](https://jikan.docs.apiary.io/)
 
 В данном проекте использовались GET запросы к API:
-1) Получение аниме по индексу [Запрос](https://api.jikan.moe/v3/anime/{id})
-2) Получение 20 самых популярных аниме [Запрос](https://api.jikan.moe/v3/search/anime?q=&order_by=members&sort=desc&limit=20)
+1) Получение аниме по индексу ```https://api.jikan.moe/v3/anime/{id}``` [Открыть пример запроса](https://api.jikan.moe/v3/anime/3)
+2) Получение 20 самых популярных аниме ```https://api.jikan.moe/v3/search/anime?q=&order_by=members&sort=desc&limit=20``` [Открыть пример запроса](https://api.jikan.moe/v3/search/anime?q=&order_by=members&sort=desc&limit=20)
+
+----------
 
 ### Стек технологий
 <a name="ts-desc"></a>
@@ -31,6 +33,8 @@ Jikan (時間) открытый исходный код PHP и REST API для �
  * Jikan API
  * Room
  * Retrofit 2
+
+----------
 
 ### Структура проекта
 <a name="structure"></a>

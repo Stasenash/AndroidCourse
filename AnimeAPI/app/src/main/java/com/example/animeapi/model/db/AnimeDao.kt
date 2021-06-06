@@ -18,8 +18,8 @@ interface AnimeDao {
     @Query("DELETE FROM anime")
     fun deleteAll()
 
-    @Query("SELECT * FROM anime WHERE title = :title")
-    fun getAnimeByTitle(title : String) : List<Anime>
+    @Query("SELECT * FROM anime WHERE title LIKE '%' || :title || '%'")
+    fun getAnimeLikeTitle(title : String) : List<Anime>
 
     @Query("SELECT * FROM anime ORDER BY score desc")
     fun getAnimeSortedByScore() : List<Anime>

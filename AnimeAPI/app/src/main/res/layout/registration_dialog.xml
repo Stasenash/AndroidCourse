@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/register"
-            app:backgroundTint="#3F51B5" />
+            app:backgroundTint="@color/teal_800" />
 
         <Button
             android:id="@+id/button_close"
@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
-            app:backgroundTint="#3F51B5" />
+            app:backgroundTint="@color/teal_800" />
     </LinearLayout>
 
 </LinearLayout>

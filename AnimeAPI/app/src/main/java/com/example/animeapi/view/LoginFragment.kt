@@ -44,6 +44,7 @@ class LoginFragment : Fragment() {
 
             GlobalScope.launch(Dispatchers.IO) {
                 withContext(Dispatchers.IO) {
+                    userDao?.deactivateAll()
                     val userList = userDao?.getUserByLogin(login)
 
                     withContext(Main) {
@@ -53,6 +54,9 @@ class LoginFragment : Fragment() {
                         }
 
                         if (login == user?.login && password == user?.password) {
+                            withContext(Dispatchers.IO) {
+                                userDao?.setActive(user.id)
+                            }
                             findNavController().navigate(R.id.searchFragment)
                         } else {
                             val builder = AlertDialog.Builder(view.context)
@@ -84,7 +88,7 @@ class LoginFragment : Fragment() {
 
                 GlobalScope.launch(Dispatchers.IO) {
                     withContext(Dispatchers.IO) {
-                        userDao!!.insert(User(login, email, password))
+                        userDao!!.insert(User(login, email, password, false))
                     }
                 }
             }

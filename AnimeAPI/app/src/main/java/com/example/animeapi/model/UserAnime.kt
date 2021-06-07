@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey
             childColumns = arrayOf("user_id"),
             onDelete = CASCADE),
         ForeignKey(entity = Anime::class,
-            parentColumns = arrayOf("anime_id"),
+            parentColumns = arrayOf("id"),
             childColumns = arrayOf("anime_id"),
             onDelete = CASCADE)]
 )
@@ -23,8 +23,8 @@ data class UserAnime (
     @ColumnInfo(name = "anime_id")
     val anime_id: Int,
 
-    @ColumnInfo(name = "status")
-    val status: String,
+    @ColumnInfo(name = "type")
+    val type: String,
 
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0

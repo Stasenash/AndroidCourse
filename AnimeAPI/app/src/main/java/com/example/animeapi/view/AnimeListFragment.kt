@@ -73,5 +73,4 @@ class AnimeListFragment : Fragment() {
         }
         return inflater.inflate(R.layout.fragment_anime_list, container, false)
     }
-
 }

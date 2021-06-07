@@ -19,4 +19,13 @@ interface UserDao {
 
     @Query("SELECT * FROM user WHERE login = :login")
     fun getUserByLogin(login : String) : List<User>
+
+    @Query("UPDATE user SET isActive = 1 WHERE id = :userId")
+    fun setActive(userId : Int)
+
+    @Query("UPDATE user SET isActive = 0")
+    fun deactivateAll()
+
+    @Query("SELECT * FROM user WHERE isActive = 1")
+    fun getActiveUser() : User
 }

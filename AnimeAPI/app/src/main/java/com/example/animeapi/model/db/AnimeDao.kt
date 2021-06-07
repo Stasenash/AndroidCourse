@@ -15,6 +15,9 @@ interface AnimeDao {
     @Query("SELECT * FROM anime")
     fun getAnimes() : List<Anime>
 
+    @Query("SELECT * FROM anime WHERE mal_id = :malId")
+    fun getAnimeById(malId : String) : Anime
+
     @Query("DELETE FROM anime")
     fun deleteAll()
 

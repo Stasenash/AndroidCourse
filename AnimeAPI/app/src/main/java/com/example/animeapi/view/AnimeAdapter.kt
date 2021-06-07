@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -11,11 +12,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.animeapi.R
 import com.example.animeapi.model.Anime
+import com.example.animeapi.model.User
+import com.example.animeapi.model.UserAnime
+import com.example.animeapi.model.db.AnimeDao
+import com.example.animeapi.model.db.AppDatabase
+import com.example.animeapi.model.db.UserAnimeDao
+import com.example.animeapi.model.db.UserDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class AnimeAdapter : RecyclerView.Adapter<AnimeAdapter.AnimeTitleHolder>() {
     var list = listOf<Anime>()
     lateinit var mContext : Context
+    var userAnimeDao: UserAnimeDao? = null
+    var userDao: UserDao? = null
+    var animeDao: AnimeDao? = null
 
     fun update(list: List<Anime>) {
         this.list = list
@@ -25,6 +39,9 @@ class AnimeAdapter : RecyclerView.Adapter<AnimeAdapter.AnimeTitleHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnimeTitleHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.anime_item, parent, false)
         this.mContext = parent.context
+        userDao = AppDatabase.createDb(mContext).userDao()
+        userAnimeDao = AppDatabase.createDb(mContext).userAnimeDao()
+        animeDao = AppDatabase.createDb(mContext).animeDao()
         return AnimeTitleHolder(view)
     }
 
@@ -35,6 +52,30 @@ class AnimeAdapter : RecyclerView.Adapter<AnimeAdapter.AnimeTitleHolder>() {
         holder.bind(item)
         holder.itemView.setOnClickListener {
             fragmentJump(item)
+        }
+        val likeButton = holder.view.findViewById<Button>(R.id.heart_card_button)
+        likeButton.setOnClickListener{
+            GlobalScope.launch(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
+                    val user = userDao?.getActiveUser()
+                    val anime = animeDao?.getAnimeById(item.mal_id)
+                    if (user != null && anime != null) {
+                        userAnimeDao?.insert(UserAnime(user.id, anime.id, "liked"))
+                    }
+                }
+            }
+        }
+        val watchedButton = holder.view.findViewById<Button>(R.id.eye_card_button)
+        watchedButton.setOnClickListener{
+            GlobalScope.launch(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
+                    val user = userDao?.getActiveUser()
+                    val anime = animeDao?.getAnimeById(item.mal_id)
+                    if (user != null && anime != null) {
+                        userAnimeDao?.insert(UserAnime(user.id, anime.id, "watched"))
+                    }
+                }
+            }
         }
     }
 

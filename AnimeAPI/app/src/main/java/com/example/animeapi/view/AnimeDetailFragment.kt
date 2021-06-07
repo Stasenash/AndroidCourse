@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.animeapi.R
+import com.example.animeapi.databinding.FragmentAnimeDetailBinding
+import com.example.animeapi.databinding.RatingDialogBinding
 import com.example.animeapi.model.Anime
 import com.example.animeapi.model.User
 import com.example.animeapi.network.ApiService
@@ -22,53 +24,60 @@ import kotlinx.coroutines.withContext
 
 class AnimeDetailFragment : Fragment() {
     lateinit var anime : Anime
+    private var _binding: FragmentAnimeDetailBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    private var _dialogBinding: RatingDialogBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val dialogBinding get() = _dialogBinding!!
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_anime_detail, container, false)
-    }
+        _binding = FragmentAnimeDetailBinding.inflate(inflater, container, false)
+        val view = binding.root
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        fillContent(anime)
-        view.findViewById<Button>(R.id.button_rate).setOnClickListener {
-            val dialogView = LayoutInflater.from(view.context).inflate(R.layout.rating_dialog, null)
-            val builder = AlertDialog.Builder(view.context)
-                .setView(dialogView)
-                .setTitle("Оценить аниме")
-            val alertDialog = builder.show()
+        _dialogBinding = RatingDialogBinding.inflate(inflater, container, false)
 
-            dialogView.findViewById<Button>(R.id.button_rate_confirm).setOnClickListener {
-                val rating = dialogView?.findViewById<RatingBar>(R.id.ratingBar)?.rating?.times(2)
+        binding.animeTitle.text = anime.title
+        binding.synopsis.text = anime.synopsis
+        binding.scoreField.text = anime.score
+        Glide
+            .with(view)
+            .load(anime.image_url)
+            .into(binding.animeImage)
+
+        val dialogView = dialogBinding.root
+        val builder = AlertDialog.Builder(dialogView.context)
+            .setView(dialogView)
+            .setTitle("Оценить аниме")
+        val alertDialog = builder.create()
+
+        binding.buttonRate.setOnClickListener {
+            alertDialog.show()
+
+            dialogBinding.buttonRateConfirm.setOnClickListener {
+                val rating = dialogBinding.ratingBar.rating.times(2)
                 alertDialog.dismiss()
             }
 
-            dialogView.findViewById<Button>(R.id.button_close).setOnClickListener {
+            dialogBinding.buttonClose.setOnClickListener {
                 alertDialog.dismiss()
             }
         }
+
+        return view
     }
 
-    fun fillContent(anime : Anime) {
-        val animeTitle = view?.findViewById<TextView>(R.id.anime_title)
-        val animeImage = view?.findViewById<ImageView>(R.id.anime_image)
-        val synopsis = view?.findViewById<TextView>(R.id.synopsis)
-        val score = view?.findViewById<TextView>(R.id.score_field)
-
-        animeTitle?.text = anime.title
-        view?.let {
-            if (animeImage != null) {
-                Glide
-                    .with(it)
-                    .load(anime.image_url)
-                    .into(animeImage)
-            }
-        }
-        synopsis?.text = anime.synopsis
-        score?.text = anime.score
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        _dialogBinding = null
     }
 }

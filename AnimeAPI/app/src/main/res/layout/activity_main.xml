@@ -33,10 +33,10 @@
         android:layout_gravity="bottom"
         android:background="?android:attr/windowBackground"
         app:itemBackground="@color/teal_800"
+        app:itemIconSize="35dp"
         app:itemTextColor="@color/white"
         app:labelVisibilityMode="labeled"
-        app:menu="@menu/navigation"
-        app:itemIconSize="35dp"/>
+        app:menu="@menu/navigation" />
 
     <fragment
         android:id="@+id/fragment"

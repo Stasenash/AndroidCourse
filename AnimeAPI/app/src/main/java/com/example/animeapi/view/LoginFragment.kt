@@ -10,6 +10,10 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.navigation.fragment.findNavController
 import com.example.animeapi.R
+import com.example.animeapi.databinding.FragmentAnimeDetailBinding
+import com.example.animeapi.databinding.FragmentLoginBinding
+import com.example.animeapi.databinding.RegistrationDialogBinding
+import com.example.animeapi.model.Anime
 import com.example.animeapi.model.db.AppDatabase
 import com.example.animeapi.model.db.UserDao
 import com.example.animeapi.model.User
@@ -24,6 +28,17 @@ import kotlinx.coroutines.withContext
  */
 class LoginFragment : Fragment() {
 
+    lateinit var anime : Anime
+    private var _binding: FragmentLoginBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    private var _dialogBinding: RegistrationDialogBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val dialogBinding get() = _dialogBinding!!
+
     var userDao : UserDao? = null
 
     override fun onCreateView(
@@ -32,15 +47,15 @@ class LoginFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         userDao = AppDatabase.createDb(requireContext()).userDao()
-        return inflater.inflate(R.layout.fragment_login, container, false)
-    }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        val view = binding.root
 
-        view.findViewById<Button>(R.id.button_login).setOnClickListener {
-            val login = view.findViewById<EditText>(R.id.editLogin).text.toString()
-            val password = view.findViewById<EditText>(R.id.editPassword).text.toString()
+        _dialogBinding = RegistrationDialogBinding.inflate(inflater, container, false)
+
+        binding.buttonLogin.setOnClickListener{
+            val login = binding.editLogin.text.toString()
+            val password = binding.editPassword.text.toString()
 
             GlobalScope.launch(Dispatchers.IO) {
                 withContext(Dispatchers.IO) {
@@ -72,19 +87,20 @@ class LoginFragment : Fragment() {
             }
         }
 
-        view.findViewById<Button>(R.id.button_registration).setOnClickListener {
-            val dialogView = LayoutInflater.from(view.context).inflate(R.layout.registration_dialog, null)
-            val builder = AlertDialog.Builder(view.context)
+        binding.buttonRegistration.setOnClickListener {
+            val dialogView = dialogBinding.root
+
+            val builder = AlertDialog.Builder(dialogView.context)
                 .setView(dialogView)
                 .setTitle("Форма регистрации")
             val  alertDialog = builder.show()
 
-            dialogView.findViewById<Button>(R.id.button_reg_confirm).setOnClickListener {
+            dialogBinding.buttonRegConfirm.setOnClickListener {
                 alertDialog.dismiss()
 //                TODO: пароль по хэшу
-                val login = dialogView.findViewById<EditText>(R.id.text_login).text.toString()
-                val email = dialogView.findViewById<EditText>(R.id.text_email).text.toString()
-                val password = dialogView.findViewById<EditText>(R.id.text_password).text.toString()
+                val login = dialogBinding.textLogin.text.toString()
+                val email = dialogBinding.textEmail.text.toString()
+                val password = dialogBinding.textPassword.text.toString()
 
                 GlobalScope.launch(Dispatchers.IO) {
                     withContext(Dispatchers.IO) {
@@ -93,9 +109,17 @@ class LoginFragment : Fragment() {
                 }
             }
 
-            dialogView.findViewById<Button>(R.id.button_close).setOnClickListener {
+            dialogBinding.buttonClose.setOnClickListener {
                 alertDialog.dismiss()
             }
         }
+
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        _dialogBinding = null
     }
 }

@@ -20,7 +20,7 @@ import kotlinx.coroutines.withContext
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
-class AnimeListFragment : Fragment() {
+class PopularFragment : Fragment() {
 
     var animeDao: AnimeDao? = null
 
@@ -71,6 +71,6 @@ class AnimeListFragment : Fragment() {
                 }
             }
         }
-        return inflater.inflate(R.layout.fragment_anime_list, container, false)
+        return inflater.inflate(R.layout.fragment_popular, container, false)
     }
 }

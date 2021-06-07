@@ -6,7 +6,7 @@
         android:title="Поиск" />
 
     <item
-        android:id="@+id/animeListFragment"
+        android:id="@+id/popularFragment"
         android:icon="@drawable/star"
         android:title="Популярные" />
 
@@ -16,12 +16,12 @@
         android:title="Выйти" />
 
     <item
-        android:id="@+id/navigation_favourite"
+        android:id="@+id/likedFragment"
         android:icon="@drawable/heart"
         android:title="Избранное" />
 
     <item
-        android:id="@+id/navigation_watched"
+        android:id="@+id/watchedFragment"
         android:icon="@drawable/eye"
         android:title="Смотрел" />
 </menu>

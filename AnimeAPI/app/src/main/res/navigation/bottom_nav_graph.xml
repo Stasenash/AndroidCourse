@@ -6,10 +6,10 @@
     app:startDestination="@id/searchFragment">
 
     <fragment
-        android:id="@+id/animeListFragment"
-        android:name="com.example.animeapi.view.AnimeListFragment"
-        android:label="fragment_anime_list"
-        tools:layout="@layout/fragment_anime_list" />
+        android:id="@+id/popularFragment"
+        android:name="com.example.animeapi.view.PopularFragment"
+        android:label="popularFragment"
+        tools:layout="@layout/fragment_popular" />
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.animeapi.view.LoginFragment"
@@ -23,4 +23,12 @@
         android:id="@+id/animeDetailFragment"
         android:name="com.example.animeapi.view.AnimeDetailFragment"
         android:label="AnimeDetailFragment" />
+    <fragment
+        android:id="@+id/likedFragment"
+        android:name="com.example.animeapi.view.LikedFragment"
+        android:label="LikedFragment" />
+    <fragment
+        android:id="@+id/watchedFragment"
+        android:name="com.example.animeapi.view.WatchedFragment"
+        android:label="WatchedFragment" />
 </navigation>

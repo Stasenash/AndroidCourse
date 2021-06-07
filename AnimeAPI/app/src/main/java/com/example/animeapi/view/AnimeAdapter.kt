@@ -7,12 +7,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.animeapi.R
 import com.example.animeapi.model.Anime
-import com.example.animeapi.model.User
 import com.example.animeapi.model.UserAnime
 import com.example.animeapi.model.db.AnimeDao
 import com.example.animeapi.model.db.AppDatabase
@@ -58,9 +56,17 @@ class AnimeAdapter : RecyclerView.Adapter<AnimeAdapter.AnimeTitleHolder>() {
             GlobalScope.launch(Dispatchers.IO) {
                 withContext(Dispatchers.IO) {
                     val user = userDao?.getActiveUser()
-                    val anime = animeDao?.getAnimeById(item.mal_id)
+                    val anime = animeDao?.getAnimeByMalId(item.mal_id)
+
                     if (user != null && anime != null) {
-                        userAnimeDao?.insert(UserAnime(user.id, anime.id, "liked"))
+                        val existingAnime = userAnimeDao?.getAnimesByUserAnimeAndType(user.id, anime.id, "liked")
+                        if (!existingAnime.isNullOrEmpty()) {
+                            for (exAnime in existingAnime) {
+                                userAnimeDao?.deleteAnime(exAnime.id)
+                            }
+                        } else {
+                            userAnimeDao?.insert(UserAnime(user.id, anime.id, "liked"))
+                        }
                     }
                 }
             }
@@ -70,9 +76,16 @@ class AnimeAdapter : RecyclerView.Adapter<AnimeAdapter.AnimeTitleHolder>() {
             GlobalScope.launch(Dispatchers.IO) {
                 withContext(Dispatchers.IO) {
                     val user = userDao?.getActiveUser()
-                    val anime = animeDao?.getAnimeById(item.mal_id)
+                    val anime = animeDao?.getAnimeByMalId(item.mal_id)
                     if (user != null && anime != null) {
-                        userAnimeDao?.insert(UserAnime(user.id, anime.id, "watched"))
+                        val existingAnime = userAnimeDao?.getAnimesByUserAnimeAndType(user.id, anime.id, "watched")
+                        if (!existingAnime.isNullOrEmpty()) {
+                            for (exAnime in existingAnime) {
+                                userAnimeDao?.deleteAnime(exAnime.id)
+                            }
+                        } else {
+                            userAnimeDao?.insert(UserAnime(user.id, anime.id, "watched"))
+                        }
                     }
                 }
             }

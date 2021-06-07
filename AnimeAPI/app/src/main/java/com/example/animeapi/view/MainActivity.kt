@@ -26,6 +26,12 @@ class MainActivity : AppCompatActivity() {
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        val nm = NetworkManager(this.applicationContext)
+        if (!nm.isConnectedToInternet!!) {
+            toolbar.setTitle(toolbar.title.toString() + " - OFFLINE")
+        }
+        setSupportActionBar(toolbar)
+
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.navigation)
         val navController = findNavController(R.id.fragment)
 

@@ -24,6 +24,9 @@ interface AnimeDao {
     @Query("DELETE FROM anime")
     fun deleteAll()
 
+    @Query("DELETE FROM anime WHERE id = :id")
+    fun deleteAnimeById(id : Int)
+
     @Query("SELECT * FROM anime WHERE title LIKE '%' || :title || '%'")
     fun getAnimeLikeTitle(title : String) : List<Anime>
 

@@ -17,6 +17,9 @@ interface UserDao {
     @Query("DELETE FROM user")
     fun deleteAll()
 
+    @Query("DELETE FROM user WHERE login = :login")
+    fun deleteUserByLogin(login : String)
+
     @Query("SELECT * FROM user WHERE login = :login")
     fun getUserByLogin(login : String) : List<User>
 

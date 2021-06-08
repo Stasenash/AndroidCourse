@@ -17,11 +17,8 @@ interface UserAnimeDao {
     @Query("DELETE FROM user_anime WHERE id= :id")
     fun deleteAnime(id : Int)
 
-    @Query("SELECT * FROM user_anime WHERE type = 'liked' and user_id = :user_id")
-    fun getLikedAnimesByUser(user_id : Int) : List<UserAnime>
-
-    @Query("SELECT * FROM user_anime WHERE type = 'watched' and user_id = :user_id")
-    fun getWatchedAnimesByUser(user_id : Int) : List<UserAnime>
+    @Query("SELECT * FROM user_anime WHERE type = :label and user_id = :user_id")
+    fun getAnimeWithLabelByUser(user_id: Int, label: String): List<UserAnime>
 
     @Query("SELECT * FROM user_anime WHERE type = :type and user_id = :user_id and anime_id = :anime_id")
     fun getAnimesByUserAnimeAndType(user_id : Int, anime_id: Int, type : String) : List<UserAnime>

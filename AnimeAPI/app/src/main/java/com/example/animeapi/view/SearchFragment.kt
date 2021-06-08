@@ -10,7 +10,11 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.animeapi.R
+import com.example.animeapi.databinding.FragmentPopularBinding
+import com.example.animeapi.databinding.FragmentSearchBinding
+import com.example.animeapi.manager.AnimeManager
 import com.example.animeapi.manager.NetworkManager
+import com.example.animeapi.manager.UiHelper
 import com.example.animeapi.model.db.AnimeDao
 import com.example.animeapi.model.db.AppDatabase
 import com.example.animeapi.network.ApiService
@@ -20,62 +24,41 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SearchFragment : Fragment() {
+    private var _binding: FragmentSearchBinding? = null
 
-    var animeDao: AnimeDao? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    lateinit var animeManager: AnimeManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        animeDao = AppDatabase.createDb(requireContext()).animeDao()
-        return inflater.inflate(R.layout.fragment_search, container, false)
-    }
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        animeManager = AnimeManager(requireContext())
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        val view = binding.root
 
-        view.findViewById<Button>(R.id.search_button).setOnClickListener {
-            val textField = view.findViewById<EditText>(R.id.search_field)
+        binding.searchButton.setOnClickListener {
+            val textField = binding.searchField
             val nm = NetworkManager(view.context)
             val connected = nm.isConnectedToInternet
-            if (connected!!) {
-                GlobalScope.launch(Dispatchers.IO) {
-                    val listResponse = ApiService.instance().getAnimeByName(textField.text.toString())
-                    withContext(Dispatchers.Main) {
-                        val animes = listResponse.body()?.animeList!!
-                        for (anime in animes!!) {
-                            withContext(Dispatchers.IO) {
-                                val animeList = animeDao?.getAnimeLikeTitle(anime.title)
-                                if (animeList.isNullOrEmpty()) {
-                                    animeDao!!.insert(anime)
-                                }
-                            }
-                        }
-                        val rv = view.findViewById<RecyclerView>(R.id.rec_view)
 
-                        rv?.layoutManager = GridLayoutManager(view.context, 2)
-                        val adapter = AnimeAdapter()
-                        rv?.adapter = adapter
-
-                        adapter.update(animes)
-                    }
+            GlobalScope.launch(Dispatchers.IO) {
+                val animeName = textField.text.toString()
+                val animes = if (connected!!) {
+                    animeManager.downloadAnimesByName(animeName)
+                } else {
+                    animeManager.getAnimesByName(animeName)
                 }
-            } else {
-                GlobalScope.launch(Dispatchers.IO) {
-                    val animes = animeDao?.getAnimeLikeTitle(textField.text.toString())
-                    withContext(Dispatchers.Main) {
-                        val rv = view.findViewById<RecyclerView>(R.id.rec_view)
-
-                        rv?.layoutManager = GridLayoutManager(view.context, 2)
-                        val adapter = AnimeAdapter()
-                        rv?.adapter = adapter
-
-                        if (animes != null) {
-                            adapter.update(animes)
-                        }
-                    }
+                withContext(Dispatchers.Main) {
+                    UiHelper.updateAdapter(view, binding.recView, animes)
                 }
             }
         }
+
+        return view
     }
 }

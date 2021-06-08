@@ -8,7 +8,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.animeapi.R
+import com.example.animeapi.databinding.FragmentAnimeDetailBinding
+import com.example.animeapi.databinding.FragmentWatchedBinding
+import com.example.animeapi.manager.AnimeManager
 import com.example.animeapi.manager.NetworkManager
+import com.example.animeapi.manager.UiHelper
 import com.example.animeapi.model.Anime
 import com.example.animeapi.model.db.AnimeDao
 import com.example.animeapi.model.db.AppDatabase
@@ -24,38 +28,29 @@ import kotlinx.coroutines.withContext
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class WatchedFragment : Fragment() {
-
-    var userAnimeDao: UserAnimeDao? = null
-    var userDao: UserDao? = null
-    var animeDao: AnimeDao? = null
+    private var _binding: FragmentWatchedBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+    lateinit var animeManager: AnimeManager
 
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        avedInstanceState: Bundle?
     ): View? {
-        userAnimeDao = AppDatabase.createDb(requireContext()).userAnimeDao()
-        userDao = AppDatabase.createDb(requireContext()).userDao()
-        animeDao = AppDatabase.createDb(requireContext()).animeDao()
+        _binding = FragmentWatchedBinding.inflate(inflater, container, false)
+        animeManager = AnimeManager(requireContext())
+        val view = binding.root
 
         GlobalScope.launch(Dispatchers.IO) {
-            val user = userDao!!.getActiveUser()
-            val userAnimes = userAnimeDao?.getWatchedAnimesByUser(user.id)
-            val animes = mutableListOf<Anime>()
-            if (userAnimes != null) {
-                for (anime in userAnimes) {
-                    animes.add(animeDao!!.getAnimeById(anime.anime_id))
-                }
-            }
+            val animes = animeManager.getWatchedAnimes()
+
             withContext(Dispatchers.Main) {
-                val rv = view?.findViewById<RecyclerView>(R.id.rec_view)
-
-                rv?.layoutManager = GridLayoutManager(view?.context, 2)
-                val adapter = AnimeAdapter()
-                rv?.adapter = adapter
-
-                adapter.update(animes)
+                UiHelper.updateAdapter(view, binding.recView, animes)
             }
         }
-        return inflater.inflate(R.layout.fragment_watched, container, false)
+
+        return view
     }
 }

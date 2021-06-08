@@ -8,7 +8,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.animeapi.R
+import com.example.animeapi.databinding.FragmentPopularBinding
+import com.example.animeapi.databinding.FragmentWatchedBinding
+import com.example.animeapi.manager.AnimeManager
 import com.example.animeapi.manager.NetworkManager
+import com.example.animeapi.manager.UiHelper
+import com.example.animeapi.model.Anime
 import com.example.animeapi.model.db.AnimeDao
 import com.example.animeapi.model.db.AppDatabase
 import com.example.animeapi.network.ApiService
@@ -21,56 +26,38 @@ import kotlinx.coroutines.withContext
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class PopularFragment : Fragment() {
+    private var _binding: FragmentPopularBinding? = null
 
-    var animeDao: AnimeDao? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
+
+    lateinit var animeManager: AnimeManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        animeDao = AppDatabase.createDb(requireContext()).animeDao()
+        _binding = FragmentPopularBinding.inflate(inflater, container, false)
+        animeManager = AnimeManager(requireContext())
 
+        val view = binding.root
         val nm = context?.let { NetworkManager(it) }
         val connected = nm?.isConnectedToInternet
 
-        if (connected!!) {
-            GlobalScope.launch(Dispatchers.IO) {
-                val listResponse = ApiService.instance().getListOf20AnimeByPopularity()
-                withContext(Dispatchers.Main) {
-                    val animes = listResponse.body()?.animeList!!
-                    for (anime in animes!!) {
-                        withContext(Dispatchers.IO) {
-                            val animeList = animeDao?.getAnimeLikeTitle(anime.title)
-                            if (animeList.isNullOrEmpty()) {
-                                animeDao!!.insert(anime)
-                            }
-                        }
-                        val rv = view?.findViewById<RecyclerView>(R.id.rec_view)
-
-                        rv?.layoutManager = GridLayoutManager(view?.context, 2)
-                        val adapter = AnimeAdapter()
-                        rv?.adapter = adapter
-
-                        adapter.update(animes)
-                    }
-                }
+        GlobalScope.launch(Dispatchers.IO) {
+            val animes = if (connected!!) {
+                animeManager.downloadPopularAnimes()
+            } else {
+                animeManager.getPopularAnimes()!!
             }
-        } else {
-            GlobalScope.launch(Dispatchers.IO) {
-                val animes = animeDao?.getAnimeSortedByScore()?.take(20)
-                withContext(Dispatchers.Main) {
-                    val rv = view?.findViewById<RecyclerView>(R.id.rec_view)
-
-                    rv?.layoutManager = GridLayoutManager(view?.context, 2)
-                    val adapter = AnimeAdapter()
-                    rv?.adapter = adapter
-
-                    if (animes != null) {
-                        adapter.update(animes)
-                    }
-                }
+            withContext(Dispatchers.Main) {
+                UiHelper.updateAdapter(view, binding.recView, animes)
             }
         }
-        return inflater.inflate(R.layout.fragment_popular, container, false)
+
+        return view
     }
+
+
 }

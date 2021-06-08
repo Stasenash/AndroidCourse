@@ -11,12 +11,13 @@
         android:layout_height="wrap_content"
         android:theme="@style/Theme.AnimeAPI.AppBarOverlay">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#3F51B5"
-            app:popupTheme="@style/Theme.AnimeAPI.PopupOverlay" />
+            android:background="#283593"
+            app:popupTheme="@style/Theme.AnimeAPI.PopupOverlay"
+            style="@style/Widget.MaterialComponents.Toolbar.Primary"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
@@ -46,5 +49,13 @@ class FirstFragment : Fragment() {
             }
         }
         return inflater.inflate(R.layout.fragment_first, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        view.findViewById<Button>(R.id.changeButton).setOnClickListener {
+            val textView = view.findViewById(R.id.textToBeChanged) as TextView
+            val textEdit = view.findViewById(R.id.textInput) as EditText
+            textView.text = textEdit.text
+        }
     }
 }
